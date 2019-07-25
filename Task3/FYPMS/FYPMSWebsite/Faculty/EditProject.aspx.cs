@@ -8,11 +8,12 @@ namespace FYPMSWebsite.Faculty
 {
     public partial class EditProject : System.Web.UI.Page
     {
-        //*************************************************
-        // Uses TODO 18, 20, 21, 22, 23; in Helpers.cs 35 *
-        //*************************************************
+        //******************************************************
+        // Uses TODO 18, 20, 21, 22, 23; in SharedAccess.cs 35 *
+        //******************************************************
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
+        SharedAccess mySharedAccess = new SharedAccess();
         private readonly string loggedinUsername = HttpContext.Current.User.Identity.Name;
 
 
@@ -45,8 +46,8 @@ namespace FYPMSWebsite.Faculty
 
         private void PopulateCosupervisor()
         {
-            // Uses TODO 35 in Helpers.cs.
-            DataTable dtPossibleCosupervisors = myHelpers.GetFaculty(lblResultMessage);
+            // Uses TODO 35 in SharedAccess.cs.
+            DataTable dtPossibleCosupervisors = mySharedAccess.GetFaculty(lblResultMessage);
 
             // Display the query result if it is valid.
             if (dtPossibleCosupervisors != null)
@@ -55,7 +56,7 @@ namespace FYPMSWebsite.Faculty
                 if (dtPossibleCosupervisors != null)
                 {
                     // Remove the existing supervisor from the list of potential cosupervisors.
-                    dtPossibleCosupervisors = myHelpers.RemoveSupervisor(dtPossibleCosupervisors, loggedinUsername);
+                    dtPossibleCosupervisors = mySharedAccess.RemoveSupervisor(dtPossibleCosupervisors, loggedinUsername);
                     ddlCosupervisor.DataSource = dtPossibleCosupervisors;
                     ddlCosupervisor.DataValueField = "USERNAME";
                     ddlCosupervisor.DataTextField = "FACULTYNAME";
@@ -72,7 +73,7 @@ namespace FYPMSWebsite.Faculty
 
         private void PopulateProjectCategory()
         {
-            DataTable dtCategory = myHelpers.GetProjectCategories(lblResultMessage);
+            DataTable dtCategory = mySharedAccess.GetProjectCategories(lblResultMessage);
 
             // Populate the category dropdown list with the FYP categories if there is no error in the query.
             if (dtCategory != null)
@@ -100,7 +101,7 @@ namespace FYPMSWebsite.Faculty
                         PopulateCosupervisor();
                         PopulateProjectCategory();
 
-                        DataTable dtProject = myHelpers.GetProjectDetails(fypId, lblResultMessage);
+                        DataTable dtProject = mySharedAccess.GetProjectDetails(fypId, lblResultMessage);
 
                         // Get the project information; save the result in ViewState and display it if it is not null.
                         if (dtProject != null)

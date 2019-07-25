@@ -9,11 +9,12 @@ namespace FYPMSWebsite.Student
 {
     public partial class ViewGrades : System.Web.UI.Page
     {
-        //*************************************
-        // Uses TODO 31, 32; in Helpers.cs 39 *
-        //*************************************
+        //******************************************
+        // Uses TODO 31, 32; in SharedAccess.cs 39 *
+        //******************************************
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
+        private SharedAccess mySharedAccess = new SharedAccess();
         private readonly string loggedinUsername = HttpContext.Current.User.Identity.Name;
 
 
@@ -37,15 +38,15 @@ namespace FYPMSWebsite.Student
             {
                 if (dtProjectInfo.Rows.Count != 0)
                 {
-                    // Uses TODO 39 in Helpers.cs.
-                    DataTable dtSupervisors = myHelpers.GetProjectSupervisors(dtProjectInfo.Rows[0]["FYPID"].ToString(), lblResultMessage);
+                    // Uses TODO 39 in SharedAccess.cs.
+                    DataTable dtSupervisors = mySharedAccess.GetProjectSupervisors(dtProjectInfo.Rows[0]["FYPID"].ToString(), lblResultMessage);
 
                     if (dtSupervisors != null)
                     {
                         if (dtSupervisors.Rows.Count != 0)
                         {
                             txtTitle.Text = dtProjectInfo.Rows[0]["TITLE"].ToString();
-                            txtSupervisor.Text = myHelpers.SupervisorsToString(dtSupervisors);
+                            txtSupervisor.Text = mySharedAccess.SupervisorsToString(dtSupervisors);
                             result = true;
                         }
                     }

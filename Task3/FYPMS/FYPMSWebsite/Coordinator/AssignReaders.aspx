@@ -6,7 +6,7 @@
         <asp:Panel ID="pnlDisplayProjectsWithoutReaders" runat="server" Visible="False">
             <hr />
             <div class="form-group" role="row">
-                <h5><span style="text-decoration: underline; color: #800000" class="h5"><strong>Project Without Readers</strong></span></h5>
+                <h5><span style="text-decoration: underline; color: #800000" class="h5"><strong>Projects Without Readers</strong></span></h5>
                 <div class="col-md-12">
                     <asp:GridView ID="gvProjectsWithoutReaders" runat="server" CssClass="table-condensed" BorderStyle="Solid" CellPadding="0"
                         AutoGenerateSelectButton="True" Font-Names="Arial" Font-Size="Small"

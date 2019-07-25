@@ -8,11 +8,12 @@ namespace FYPMSWebsite.Student
 {
     public partial class SelectedProjects : System.Web.UI.Page
     {
-        //*********************************
-        // Uses TODO in Helpers.cs 38, 40 *
-        //*********************************
+        //**************************************
+        // Uses TODO in SharedAccess.cs 38, 40 *
+        //**************************************
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
+        SharedAccess mySharedAccess = new SharedAccess();
         readonly string loggedinUsername = HttpContext.Current.User.Identity.Name;
 
 
@@ -25,8 +26,8 @@ namespace FYPMSWebsite.Student
             // If the group id is empty, the student is not yet a member of any group.
             if (groupId != "")
             {
-                // Uses TODO 40 in Helpers.cs.
-                DataTable dtProjects = myHelpers.GetProjectsGroupInterestedIn(groupId, lblResultMessage);
+                // Uses TODO 40 in SharedAccess.cs.
+                DataTable dtProjects = mySharedAccess.GetProjectsGroupInterestedIn(groupId, lblResultMessage);
 
                 if (dtProjects != null)
                 {
@@ -74,8 +75,8 @@ namespace FYPMSWebsite.Student
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Uses TODO 38 in Helpers.cs.
-            string groupId = myHelpers.GetStudentGroupId(loggedinUsername, lblResultMessage);
+            // Uses TODO 38 in SharedAccess.cs.
+            string groupId = mySharedAccess.GetStudentGroupId(loggedinUsername, lblResultMessage);
             if (groupId != "SQL_ERROR")
             {
                 if (!IsPostBack)

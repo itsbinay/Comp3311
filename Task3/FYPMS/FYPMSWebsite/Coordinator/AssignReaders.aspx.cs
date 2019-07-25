@@ -8,25 +8,26 @@ namespace FYPMSWebsite.Coordinator
 {
     public partial class AssignReaders : System.Web.UI.Page
     {
-        //*************************************************
-        // Uses TODO 01, 02, 03; in Helpers.cs 33, 35, 39 *
-        //*************************************************
+        //******************************************************
+        // Uses TODO 01, 02, 03; in SharedAccess.cs 33, 35, 39 *
+        //******************************************************
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
+        private SharedAccess mySharedAccess = new SharedAccess();
 
 
         /***** Private Methods *****/
 
         private void PopulateAvailableReaders(string fypId)
         {
-            // Uses TODO 35 in Helpers.cs.
-            DataTable dtAvailableReaders = myHelpers.GetFaculty(lblResultMessage);
+            // Uses TODO 35 in SharedAccess.cs.
+            DataTable dtAvailableReaders = mySharedAccess.GetFaculty(lblResultMessage);
 
             // Display the query result if it is valid.
             if (dtAvailableReaders != null)
             {
-                // Uses TODO 39 in Helpers.cs.
-                DataTable dtSupervisors = myHelpers.GetProjectSupervisors(fypId, lblResultMessage);
+                // Uses TODO 39 in SharedAccess.cs.
+                DataTable dtSupervisors = mySharedAccess.GetProjectSupervisors(fypId, lblResultMessage);
                 if (dtSupervisors != null)
                 {
                     if (dtSupervisors.Rows.Count != 0)
@@ -34,41 +35,46 @@ namespace FYPMSWebsite.Coordinator
                         foreach (DataRow row in dtSupervisors.Rows)
                         {
                             // Exclude the faculty who are the supervisors of the project.
-                            dtAvailableReaders = myHelpers.RemoveSupervisor(dtAvailableReaders, row["USERNAME"].ToString());
+                            dtAvailableReaders = mySharedAccess.RemoveSupervisor(dtAvailableReaders, row["USERNAME"].ToString());
                         }
                     }
                     gvAvailableReaders.DataSource = dtAvailableReaders;
                     gvAvailableReaders.DataBind();
+                    gvProjectsWithoutReaders.DataSource = ViewState["dtProjectsWithoutReaders"] as DataTable;
+                    gvProjectsWithoutReaders.DataBind();
                     pnlAssignReader.Visible = true;
                 }
             }
         }
 
-        private void PopulateProjectsWithoutReaders()
+        private bool PopulateProjectsWithoutReaders()
         {
+            bool result = false;
             //***************
             // Uses TODO 01 *
             //***************
-            DataTable dtProjects = myFYPMSDB.GetProjectsWithoutReaders();
+            DataTable dtProjectsWithoutReaders = myFYPMSDB.GetProjectsWithoutReaders();
 
             // Attributes expected to be returned by the query result.
-            var attributeList = new List<string> { "GROUPID", "GROUPCODE", "TITLE", "FYPCATEGORY", "FYPTYPE" };
+            var attributeList = new List<string> { "GROUPID", "GROUPCODE", "FYPASSIGNED", "TITLE", "FYPCATEGORY", "FYPTYPE" };
 
             // Display the query result if it is valid.
-            if (myHelpers.IsQueryResultValid("01", dtProjects, attributeList, lblResultMessage))
+            if (myHelpers.IsQueryResultValid("01", dtProjectsWithoutReaders, attributeList, lblResultMessage))
             {
-                if (dtProjects.Rows.Count != 0)
+                if (dtProjectsWithoutReaders.Rows.Count != 0)
                 {
-                    gvProjectsWithoutReaders.DataSource = dtProjects;
+                    ViewState["dtProjectsWithoutReaders"] = dtProjectsWithoutReaders;
+                    gvProjectsWithoutReaders.DataSource = dtProjectsWithoutReaders;
                     gvProjectsWithoutReaders.DataBind();
                     pnlDisplayProjectsWithoutReaders.Visible = true;
+                    result = true;
                 }
-                else // Nothing to display
+                else // No projects without readers.
                 {
-                    myHelpers.ShowMessage(lblResultMessage, "There are no projects that require a reader.");
                     pnlDisplayProjectsWithoutReaders.Visible = false;
                 }
             }
+            return result;
         }
 
 
@@ -122,12 +128,12 @@ namespace FYPMSWebsite.Coordinator
             //***************
             if (myFYPMSDB.AssignReaderToProject(groupId, facultyUsername))
             {
-                DataTable dtGroupMembers = myHelpers.GetProjectGroupMembers(groupId, lblResultMessage);
+                DataTable dtGroupMembers = mySharedAccess.GetProjectGroupMembers(groupId, lblResultMessage);
 
                 if (dtGroupMembers != null)
                 {
-                    // Uses TODO 33 in Helpers.cs
-                    if (!myHelpers.CreateRequirementRecord(facultyUsername, dtGroupMembers, lblResultMessage))
+                    // Uses TODO 33 in SharedAccess.cs
+                    if (!mySharedAccess.CreateRequirementRecord(facultyUsername, dtGroupMembers, lblResultMessage))
                     {
                         // Undo the assignment of the reader to the project if creating the Requirement record failed.
                         if (!myFYPMSDB.RemoveReader(groupId))
@@ -152,9 +158,10 @@ namespace FYPMSWebsite.Coordinator
 
         protected void GvProjectsWithoutReaders_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.Controls.Count == 6)
+            if (e.Row.Controls.Count == 7)
             {
                 e.Row.Cells[1].Visible = false;
+                e.Row.Cells[3].Visible = false;
                 if (e.Row.RowType == DataControlRowType.Header)
                 {
                     myHelpers.RenameGridViewColumn(e, "GROUPCODE", "GROUP CODE");
@@ -169,11 +176,12 @@ namespace FYPMSWebsite.Coordinator
                     e.Row.Cells[2].HorizontalAlign = HorizontalAlign.Center;
                     TableCell dataCell = new TableCell();
                     dataCell.Text = "";
-                    string fypId = e.Row.Cells[1].Text;
-                    DataTable dtSupervisors = myHelpers.GetProjectSupervisors(fypId, lblResultMessage);
+                    string fypId = e.Row.Cells[3].Text;
+                    // Uses TODO 39 in SharedAccess.cs.
+                    DataTable dtSupervisors = mySharedAccess.GetProjectSupervisors(fypId, lblResultMessage);
                     if (dtSupervisors != null)
                     {
-                        dataCell.Text = myHelpers.SupervisorsToString(dtSupervisors);
+                        dataCell.Text = mySharedAccess.SupervisorsToString(dtSupervisors);
                     }
                     e.Row.Cells.Add(dataCell);
                 }
@@ -183,7 +191,7 @@ namespace FYPMSWebsite.Coordinator
         protected void GvProjectsWithoutReaders_SelectedIndexChanged(object sender, EventArgs e)
         {
             lblResultMessage.Visible = false;
-            string fypId = gvProjectsWithoutReaders.SelectedRow.Cells[1].Text;
+            string fypId = gvProjectsWithoutReaders.SelectedRow.Cells[3].Text;
             txtTitle.Text = gvProjectsWithoutReaders.SelectedRow.Cells[3].Text;
             ViewState["fypId"] = fypId;
             PopulateAvailableReaders(fypId);
@@ -193,7 +201,10 @@ namespace FYPMSWebsite.Coordinator
         {
             if (!IsPostBack)
             {
-                PopulateProjectsWithoutReaders();
+                if (!PopulateProjectsWithoutReaders())
+                {
+                    myHelpers.ShowMessage(lblResultMessage, "There are no projects that require a reader.");
+                }
             }
         }
     }

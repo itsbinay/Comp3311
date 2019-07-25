@@ -6,12 +6,13 @@ namespace FYPMSWebsite
 {
     public partial class DisplayProjectDetails : System.Web.UI.Page
     {
-        //*********************************
-        // Uses TODO in Helpers.cs 38, 39 *
-        //*********************************
+        //**************************************
+        // Uses TODO in SharedAccess.cs 38, 39 *
+        //**************************************
 
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
+        private SharedAccess mySharedAccess = new SharedAccess();
         private string returnUrl;
 
 
@@ -24,8 +25,8 @@ namespace FYPMSWebsite
 
             if (fypId != "")
             {
-                // Uses TODO 38 in Helpers.cs.
-                DataTable dtProject = myHelpers.GetProjectDetails(fypId, lblResultMessage);
+                // Uses TODO 38 in SharedAccess.cs.
+                DataTable dtProject = mySharedAccess.GetProjectDetails(fypId, lblResultMessage);
 
                 // Get the project information and display it if it is valid.
                 if (dtProject != null)
@@ -40,14 +41,14 @@ namespace FYPMSWebsite
                         txtMinStudents.Text = dtProject.Rows[0]["MINSTUDENTS"].ToString().Trim();
                         txtMaxStudents.Text = dtProject.Rows[0]["MAXSTUDENTS"].ToString().Trim();
 
-                        // Uses TODO 39 in Helpers.cs.
-                        DataTable dtSupervisors = myHelpers.GetProjectSupervisors(fypId, lblResultMessage);
+                        // Uses TODO 39 in SharedAccess.cs.
+                        DataTable dtSupervisors = mySharedAccess.GetProjectSupervisors(fypId, lblResultMessage);
                         
                         if (dtSupervisors != null)
                         {
                             if (dtSupervisors.Rows.Count != 0)
                             {
-                                txtSupervisor.Text = myHelpers.SupervisorsToString(dtSupervisors);
+                                txtSupervisor.Text = mySharedAccess.SupervisorsToString(dtSupervisors);
                             }
                             else // Nothing to display.
                             {

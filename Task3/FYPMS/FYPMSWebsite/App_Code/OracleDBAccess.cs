@@ -1,7 +1,7 @@
 ﻿using System;
-using Oracle.DataAccess.Client;
-using System.Configuration;
 using System.Data;
+using System.Configuration;
+using Oracle.DataAccess.Client;
 
 namespace FYPMSWebsite.App_Code
 {
@@ -18,12 +18,13 @@ namespace FYPMSWebsite.App_Code
         // Process a SQL SELECT statement.
         public DataTable GetData(string sql)
         {
+            DataTable result = null;
             try
             {
                 Global.sqlError = "";
                 if (sql.Trim() == "")
                 {
-                    throw new ArgumentException("The SQL statement is empty");
+                    throw new ArgumentException("The SQL statement is empty.");
                 }
 
                 DataTable dt = new DataTable();
@@ -39,7 +40,7 @@ namespace FYPMSWebsite.App_Code
                     OracleDataAdapter da = new OracleDataAdapter(sql, myOracleDBConnection);
                     da.Fill(dt);
                 }
-                return dt;
+                result = dt;
             }
             catch (ArgumentException ex)
             {
@@ -57,7 +58,11 @@ namespace FYPMSWebsite.App_Code
             {
                 Global.sqlError = ex.Message;
             }
-            return null;
+            catch (Exception ex)
+            {
+                Global.sqlError = ex.Message;
+            }
+            return result;
         }
 
         // Process an SQL SELECT statement that returns only a single value.
@@ -65,12 +70,13 @@ namespace FYPMSWebsite.App_Code
         // Returns -1 if there is an error in the SELECT statement.
         public decimal GetAggregateValue(string sql)
         {
+            Global.sqlError = "";
+            decimal result = -1;
             try
             {
-                Global.sqlError = "";
                 if (sql.Trim() == "")
                 {
-                    throw new ArgumentException("The SQL statement is empty");
+                    throw new ArgumentException("The SQL statement is empty.");
                 }
                 object aggregateValue;
                 if (myOracleDBConnection.State != ConnectionState.Open)
@@ -87,7 +93,7 @@ namespace FYPMSWebsite.App_Code
                     SQLCmd.CommandType = CommandType.Text;
                     aggregateValue = SQLCmd.ExecuteScalar();
                 }
-                return (DBNull.Value == aggregateValue ? 0 : Convert.ToDecimal(aggregateValue));
+                result = (DBNull.Value == aggregateValue ? 0 : Convert.ToDecimal(aggregateValue));
             }
             catch (ArgumentException ex)
             {
@@ -105,79 +111,87 @@ namespace FYPMSWebsite.App_Code
             {
                 Global.sqlError = ex.Message;
             }
-            return -1;
+            catch (Exception ex)
+            {
+                Global.sqlError = ex.Message;
+            }
+            return result;
         }
 
         // Process SQL INSERT, UPDATE and DELETE statements.
         public bool SetData(string sql, OracleTransaction trans)
         {
+            bool result = false;
+            Global.sqlError = "";
             try
             {
-                Global.sqlError = "";
                 if (sql.Trim() == "")
                 {
-                    throw new ArgumentException("The SQL statement is empty");
+                    throw new ArgumentException("The SQL statement is empty.");
                 }
-
                 OracleCommand SQLCmd = new OracleCommand(sql, myOracleDBConnection);
                 SQLCmd.Transaction = trans;
                 SQLCmd.CommandType = CommandType.Text;
                 SQLCmd.ExecuteNonQuery();
-                return true;
+                result = true;
             }
             catch (ArgumentException ex)
             {
-                myOracleDBConnection.Close();
                 Global.sqlError = ex.Message;
-                return false;
+                myOracleDBConnection.Close();
             }
             catch (FormatException ex)
             {
-                myOracleDBConnection.Close();
                 Global.sqlError = ex.Message;
-                return false;
+                myOracleDBConnection.Close();
             }
             catch (ApplicationException ex)
             {
-                myOracleDBConnection.Close();
                 Global.sqlError = ex.Message;
-                return false;
+                myOracleDBConnection.Close();
             }
             catch (OracleException ex)
             {
-                myOracleDBConnection.Close();
                 Global.sqlError = ex.Message;
-                return false;
+                myOracleDBConnection.Close();
             }
             catch (InvalidOperationException ex)
             {
-                myOracleDBConnection.Close();
                 Global.sqlError = ex.Message;
-                return false;
+                myOracleDBConnection.Close();
             }
+            catch (Exception ex)
+            {
+                Global.sqlError = ex.Message;
+                myOracleDBConnection.Close();
+            }
+            return result;
         }
 
         public OracleTransaction BeginTransaction()
         {
+            OracleTransaction result = null;
             try
             {
                 if (myOracleDBConnection.State != ConnectionState.Open)
                 {
                     myOracleDBConnection.Open();
-                    OracleTransaction trans = myOracleDBConnection.BeginTransaction();
-                    return trans;
+                    result = myOracleDBConnection.BeginTransaction();
                 }
                 else
                 {
-                    OracleTransaction trans = myOracleDBConnection.BeginTransaction();
-                    return trans;
+                    result = myOracleDBConnection.BeginTransaction();
                 }
             }
             catch (InvalidOperationException ex)
             {
                 Global.sqlError = ex.Message;
-                return null;
             }
+            catch (Exception ex)
+            {
+                Global.sqlError = ex.Message;
+            }
+            return result;
         }
 
         public void CommitTransaction(OracleTransaction trans)
@@ -206,6 +220,10 @@ namespace FYPMSWebsite.App_Code
             {
                 Global.sqlError = ex.Message;
             }
+            catch (Exception ex)
+            {
+                Global.sqlError = ex.Message;
+            }
         }
 
         public void DisposeTransaction(OracleTransaction trans)
@@ -231,6 +249,10 @@ namespace FYPMSWebsite.App_Code
                 Global.sqlError = ex.Message;
             }
             catch (InvalidOperationException ex)
+            {
+                Global.sqlError = ex.Message;
+            }
+            catch (Exception ex)
             {
                 Global.sqlError = ex.Message;
             }

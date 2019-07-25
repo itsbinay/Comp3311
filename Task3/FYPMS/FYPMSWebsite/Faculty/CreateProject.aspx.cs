@@ -8,11 +8,12 @@ namespace FYPMSWebsite.Faculty
 {
     public partial class CreateProject : System.Web.UI.Page
     {
-        //**************************************
-        // USES TODO: 17, 18; in Helpers.cs 35 *
-        //**************************************
+        //*******************************************
+        // USES TODO: 17, 18; in SharedAccess.cs 35 *
+        //*******************************************
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
+        private SharedAccess mySharedAccess = new SharedAccess();
         private readonly string loggedinUsername = HttpContext.Current.User.Identity.Name;
 
 
@@ -20,14 +21,14 @@ namespace FYPMSWebsite.Faculty
 
         private void PopulateCosupervisor()
         {
-            // Uses TODO 35 in Helpers.cs.
-            DataTable dtPossibleCosupervisors = myHelpers.GetFaculty(lblResultMessage);
+            // Uses TODO 35 in SharedAccess.cs.
+            DataTable dtPossibleCosupervisors = mySharedAccess.GetFaculty(lblResultMessage);
 
             // Populate the cosupervisor dropdown list.
             if (dtPossibleCosupervisors != null)
             {
                 // Remove the existing supervisor from the list of potential cosupervisors.
-                dtPossibleCosupervisors = myHelpers.RemoveSupervisor(dtPossibleCosupervisors, loggedinUsername);
+                dtPossibleCosupervisors = mySharedAccess.RemoveSupervisor(dtPossibleCosupervisors, loggedinUsername);
                 ddlCosupervisor.DataSource = dtPossibleCosupervisors;
                 ddlCosupervisor.DataValueField = "USERNAME";
                 ddlCosupervisor.DataTextField = "FACULTYNAME";
@@ -43,7 +44,7 @@ namespace FYPMSWebsite.Faculty
 
         private void PopulateProjectCategory()
         {
-            DataTable dtCategory = myHelpers.GetProjectCategories(lblResultMessage);
+            DataTable dtCategory = mySharedAccess.GetProjectCategories(lblResultMessage);
 
             // Populate the category dropdown list with the FYP categories if there is no error in the query.
             if (dtCategory != null)

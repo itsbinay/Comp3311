@@ -9,11 +9,12 @@ namespace FYPMSWebsite.Student
 {
     public partial class AvailableProjects : System.Web.UI.Page
     {
-        //********************************************
-        // Uses TODO 24, 25; in Helpers.cs 34,36, 38 *
-        //********************************************
+        //*************************************************
+        // Uses TODO 24, 25; in SharedAccess.cs 34,36, 38 *
+        //*************************************************
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
+        private SharedAccess mySharedAccess = new SharedAccess();
         readonly string loggedinUsername = HttpContext.Current.User.Identity.Name;
 
 
@@ -26,8 +27,8 @@ namespace FYPMSWebsite.Student
             // If the group id is empty, the student is not yet a member of any group.
             if (groupId != "")
             {
-                // Uses TODO 36 in Helpers.cs
-                DataTable dtProjects = myHelpers.GetGroupAvailableProjectDigests(groupId, lblResultMessage);
+                // Uses TODO 36 in SharedAccess.cs
+                DataTable dtProjects = mySharedAccess.GetGroupAvailableProjectDigests(groupId, lblResultMessage);
 
                 // Display the query result if it is valid.
                 if (dtProjects != null)
@@ -111,8 +112,8 @@ namespace FYPMSWebsite.Student
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Uses TODO 38 in Helpers.cs
-            string groupId = myHelpers.GetStudentGroupId(loggedinUsername, lblResultMessage);
+            // Uses TODO 38 in SharedAccess.cs
+            string groupId = mySharedAccess.GetStudentGroupId(loggedinUsername, lblResultMessage);
 
             if (groupId != "SQL_ERROR")
             {
@@ -121,8 +122,8 @@ namespace FYPMSWebsite.Student
                     // If the group id is empty, the student is not yet a member of any group.
                     if (groupId != "")
                     {
-                        // Uses TODO 34 in Helpers.cs.
-                        string isAssigned = myHelpers.IsGroupAssigned(groupId, lblResultMessage);
+                        // Uses TODO 34 in SharedAccess.cs.
+                        string isAssigned = mySharedAccess.IsGroupAssigned(groupId, lblResultMessage);
                         if (isAssigned != "SQL_ERROR")
                         {
                             if (isAssigned == "false")

@@ -9,6 +9,7 @@ namespace FYPMSWebsite
     {
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
+        private SharedAccess mySharedAccess = new SharedAccess();
 
 
         /***** Private Methods *****/
@@ -17,7 +18,7 @@ namespace FYPMSWebsite
         {
             lblResultMessage.Visible = false;
 
-            DataTable dtProjects = myHelpers.GetProjectDigests(lblResultMessage);
+            DataTable dtProjects = mySharedAccess.GetProjectDigests(lblResultMessage);
 
             // Display the query result if it is valid.
             if (dtProjects != null)

@@ -1,21 +1,17 @@
-﻿using System;
-using System.Data;
-using System.Web.UI.WebControls;
+﻿using System.Data;
 using System.Collections.Generic;
-using System.Windows.Forms;
+
 
 namespace FYPMSWebsite.App_Code
 {
     /// <summary>
-    /// Helpers for the Fan Club Website
+    /// Project specific methods.
     /// </summary>
 
     public class SharedAccess
     {
-        private OracleDBAccess myOracleDBAccess = new OracleDBAccess();
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
-        private string sql;
 
         public SharedAccess()
         {
@@ -33,11 +29,11 @@ namespace FYPMSWebsite.App_Code
                 foreach (DataRow row in dtGroupMembers.Rows)
                 {
                     //***************
-                    // Uses TODO XX *
+                    // Uses TODO 33 *
                     //***************
                     if (!myFYPMSDB.CreateRequirement(facultyUsername, row["USERNAME"].ToString(), "null", "null", "null", "null"))
                     {
-                        myHelpers.ShowMessage(labelControl, "*** The SQL statement of TODO XX has an error or is incorrect.");
+                        myHelpers.ShowMessage(labelControl, "*** SQL error in TODO 33: " + Global.sqlError + ".");
                         result = false;
                     }
                 }
@@ -53,7 +49,7 @@ namespace FYPMSWebsite.App_Code
         public DataTable GetFaculty(System.Web.UI.WebControls.Label labelControl)
         {
             //***************
-            // Uses TODO XX *
+            // Uses TODO 35 *
             //***************
             DataTable dtFaculty = myFYPMSDB.GetFaculty();
 
@@ -61,7 +57,7 @@ namespace FYPMSWebsite.App_Code
             var attributeList = new List<string> { "USERNAME", "FACULTYNAME" };
 
             // Display the query result if it is valid.
-            if (myHelpers.IsQueryResultValid("03", dtFaculty, attributeList, labelControl))
+            if (myHelpers.IsQueryResultValid("35", dtFaculty, attributeList, labelControl))
             {
                 return dtFaculty;
             }
@@ -74,7 +70,7 @@ namespace FYPMSWebsite.App_Code
         public DataTable GetGroupAvailableProjectDigests(string groupId, System.Web.UI.WebControls.Label labelControl)
         {
             //***************
-            // Uses TODO XX *
+            // Uses TODO 36 *
             //***************
             DataTable dtProjects = myFYPMSDB.GetGroupAvailableProjectDigests(groupId);
 
@@ -82,7 +78,7 @@ namespace FYPMSWebsite.App_Code
             var attributeList = new List<string> { "FYPID", "TITLE", "FYPCATEGORY", "FYPTYPE", "MINSTUDENTS", "MAXSTUDENTS" };
 
             // Display the query result if it is valid.
-            if (myHelpers.IsQueryResultValid("XX", dtProjects, attributeList, labelControl))
+            if (myHelpers.IsQueryResultValid("36", dtProjects, attributeList, labelControl))
             {
                 return dtProjects;
             }
@@ -96,14 +92,14 @@ namespace FYPMSWebsite.App_Code
         {
             // Get all the supervisors of a project.
             //***************
-            // Uses TODO XX *
+            // Uses TODO 39 *
             //***************
             DataTable dtSupervisors = myFYPMSDB.GetSupervisors(fypId);
 
             // Attributes expected to be returned by the query result.
             var attributeList = new List<string> { "USERNAME", "FACULTYNAME" };
 
-            if (myHelpers.IsQueryResultValid("XX", dtSupervisors, attributeList, labelControl))
+            if (myHelpers.IsQueryResultValid("39", dtSupervisors, attributeList, labelControl))
             {
                 return dtSupervisors;
             }
@@ -115,15 +111,12 @@ namespace FYPMSWebsite.App_Code
 
         public DataTable GetProjectCategories(System.Web.UI.WebControls.Label labelControl)
         {
-            //***************
-            // Uses TODO XX *
-            //***************
             DataTable dtCategory = myFYPMSDB.GetProjectCategories();
 
             // Attributes expected to be returned by the query result.
             var attributeList = new List<string> { "FYPCATEGORY" };
 
-            if (myHelpers.IsQueryResultValid("XX", dtCategory, attributeList, labelControl))
+            if (myHelpers.IsQueryResultValid("GetProjectCategories", dtCategory, attributeList, labelControl))
             {
                 return dtCategory;
             }
@@ -135,16 +128,13 @@ namespace FYPMSWebsite.App_Code
 
         public DataTable GetProjectDetails(string fypId, System.Web.UI.WebControls.Label labelControl)
         {
-            //***************
-            // Uses TODO XX *
-            //***************
             DataTable dtProject = myFYPMSDB.GetProjectDetails(fypId);
 
             // Attributes expected to be returned by the query result.
             var attributeList = new List<string> { "FYPID", "TITLE", "FYPDESCRIPTION", "FYPCATEGORY", "FYPTYPE", "REQUIREMENT", "MINSTUDENTS", "MAXSTUDENTS", "ISAVAILABLE" };
 
             // Get the project information; save the result in ViewState and display it if it is not null.
-            if (myHelpers.IsQueryResultValid("XX", dtProject, attributeList, labelControl))
+            if (myHelpers.IsQueryResultValid("Get Project Details", dtProject, attributeList, labelControl))
             {
                 return dtProject;
             }
@@ -156,16 +146,13 @@ namespace FYPMSWebsite.App_Code
 
         public DataTable GetProjectDigests(System.Web.UI.WebControls.Label labelControl)
         {
-            //***************
-            // Uses TODO XX *
-            //***************
             DataTable dtProjects = myFYPMSDB.GetProjectDigests();
 
             // Attributes expected to be returned by the query result.
             var attributeList = new List<string> { "FYPID", "TITLE", "FYPCATEGORY", "FYPTYPE", "MINSTUDENTS", "MAXSTUDENTS", "ISAVAILABLE" };
 
             // Display the query result if it is valid.
-            if (myHelpers.IsQueryResultValid("01", dtProjects, attributeList, labelControl))
+            if (myHelpers.IsQueryResultValid("Get Project Digests", dtProjects, attributeList, labelControl))
             {
                 return dtProjects;
             }
@@ -178,7 +165,7 @@ namespace FYPMSWebsite.App_Code
         public DataTable GetProjectsGroupInterestedIn(string groupId, System.Web.UI.WebControls.Label labelControl)
         {
             //***************
-            // Uses TODO XX *
+            // Uses TODO 40 *
             //***************
             DataTable dtProjectsGroupInterestedIn = myFYPMSDB.GetProjectsGroupInterestedIn(groupId);
 
@@ -186,7 +173,7 @@ namespace FYPMSWebsite.App_Code
             var attributeList = new List<string> { "FYPID", "TITLE", "FYPCATEGORY", "FYPTYPE", "FYPPRIORITY" };
 
             // Display the query result if it is valid.
-            if (myHelpers.IsQueryResultValid("XX", dtProjectsGroupInterestedIn, attributeList, labelControl))
+            if (myHelpers.IsQueryResultValid("40", dtProjectsGroupInterestedIn, attributeList, labelControl))
             {
                 return dtProjectsGroupInterestedIn;
             }
@@ -199,14 +186,14 @@ namespace FYPMSWebsite.App_Code
         public DataTable GetProjectGroupMembers(string groupId, System.Web.UI.WebControls.Label labelControl)
         {
             //***************
-            // Uses TODO XX *
+            // Uses TODO 37 *
             //***************
             DataTable dtGroupMembers = myFYPMSDB.GetProjectGroupMembers(groupId);
 
             // Attributes expected to be returned by the query result.
             var attributeList = new List<string> { "USERNAME", "STUDENTNAME", "GROUPID" };
 
-            if (myHelpers.IsQueryResultValid("XX", dtGroupMembers, attributeList, labelControl))
+            if (myHelpers.IsQueryResultValid("37", dtGroupMembers, attributeList, labelControl))
             {
                 return dtGroupMembers;
             }
@@ -216,37 +203,48 @@ namespace FYPMSWebsite.App_Code
             }
         }
 
-        public string GetStudentGroupId(string username)
+        public string GetStudentGroupId(string username, System.Web.UI.WebControls.Label labelControl)
         {
-            string groupId = "";
+            string groupId = "SQL_ERROR";
 
             if (username != "")
             {
                 //***************
-                // Uses TODO XX *
+                // Uses TODO 38 *
                 //***************
                 DataTable dtGroup = myFYPMSDB.GetStudentGroupId(username);
 
+                // Attributes expected to be returned by the query result.
+                var attributeList = new List<string> { "GROUPID" };
+
                 // Display the query result if it is valid.
-                if (dtGroup != null)
+                if (myHelpers.IsQueryResultValid("38", dtGroup, attributeList, labelControl))
                 {
-                    if (dtGroup.Rows.Count != 0) // The user is a member of a group.
+                    if (dtGroup.Rows.Count != 0) // The student is a member of a group.
                     {
                         groupId = dtGroup.Rows[0]["GROUPID"].ToString();
                     }
+                    else // The student is not a member of a group. 
+                    {
+                        groupId = "";
+                    }
                 }
+            }
+            else // There is no username; should not happen!
+            {
+                myHelpers.ShowMessage(labelControl, "*** Cannot get the username. Please check your database.");
             }
             return groupId;
         }
 
-        public bool IsGroupAssigned(string groupId, System.Web.UI.WebControls.Label labelControl)
+        public string IsGroupAssigned(string groupId, System.Web.UI.WebControls.Label labelControl)
         {
-            bool isAssigned = false;
+            string isAssigned = "false";
 
             if (groupId != "")
             {
                 //***************
-                // Uses TODO XX *
+                // Uses TODO 34 *
                 //***************
                 DataTable dtIsAssigned = myFYPMSDB.GetAssignedFypId(groupId);
 
@@ -254,19 +252,24 @@ namespace FYPMSWebsite.App_Code
                 var attributeList = new List<string> { "FYPASSIGNED" };
 
                 // Display the query result if it is valid.
-                if (myHelpers.IsQueryResultValid("XX", dtIsAssigned, attributeList, labelControl))
+                if (myHelpers.IsQueryResultValid("34", dtIsAssigned, attributeList, labelControl))
                 {
                     if (dtIsAssigned.Rows.Count != 0)
                     {
                         if (dtIsAssigned.Rows[0]["FYPASSIGNED"].ToString() != "")
                         {
-                            isAssigned = true;
+                            isAssigned = "true";
                         }
                     }
                     else // Nothing returned; should not happen!
                     {
                         myHelpers.ShowMessage(labelControl, "There is no group with group id " + groupId + ". Please check your database.");
+                        isAssigned = "SQL_ERROR";
                     }
+                }
+                else // An SQL error occurred.
+                {
+                    isAssigned = "SQL_ERROR";
                 }
             }
             return isAssigned;

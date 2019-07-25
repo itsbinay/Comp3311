@@ -1,4 +1,4 @@
- /* COMP 3311: Task 3 - Final Year Project (FYP) Management System */
+/* COMP 3311: Task 3 - Final Year Project (FYP) Management System */
 
 set feedback off
 set heading off
@@ -80,8 +80,8 @@ create table Requirement(
 	primary key(facultyUsername,studentUsername));
 	
 create table Supervises(
-	username        varchar2(15) references Faculty(username) on delete cascade,
-	fypId           smallint references FYProject(fypId) on delete cascade,
+	username    varchar2(15) references Faculty(username) on delete cascade,
+	fypId       smallint references FYProject(fypId) on delete cascade,
     primary key (username,fypId));
 
 insert into Faculty values ('cafarella','Michelle Cafarella','3702','MC');
@@ -201,7 +201,6 @@ insert into Students values ('lucylam','Lucy Lam',null);
 insert into Students values ('hughhawes','Hugh Hawes',null);
 insert into Students values ('carlchan','Carl Chan',null);
 
-insert into InterestedIn values (1,6,1);
 insert into InterestedIn values (1,11,1);
 insert into InterestedIn values (2,1,2);
 insert into InterestedIn values (2,2,1);
@@ -272,6 +271,7 @@ insert into Supervises values ('cafarella',1);
 insert into Supervises values ('cafarella',2);
 insert into Supervises values ('cafarella',11);
 insert into Supervises values ('cafarella',12);
+insert into Supervises values ('fan',7);
 insert into Supervises values ('fan',29);
 insert into Supervises values ('fan',30);
 insert into Supervises values ('garcia',17);
@@ -279,7 +279,6 @@ insert into Supervises values ('garcia',18);
 insert into Supervises values ('garcia',23);
 insert into Supervises values ('jag',5);
 insert into Supervises values ('jag',6);
-insert into Supervises values ('jag',7);
 insert into Supervises values ('jag',8);
 insert into Supervises values ('jag',9);
 insert into Supervises values ('jag',13);
@@ -288,7 +287,6 @@ insert into Supervises values ('jag',26);
 insert into Supervises values ('naughton',3);
 insert into Supervises values ('naughton',4);
 insert into Supervises values ('naughton',5);
-insert into Supervises values ('naughton',7);
 insert into Supervises values ('naughton',19);
 insert into Supervises values ('pantel',8);
 insert into Supervises values ('pantel',9);

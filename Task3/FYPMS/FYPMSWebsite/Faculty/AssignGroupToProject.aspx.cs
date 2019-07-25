@@ -9,11 +9,12 @@ namespace FYPMSWebsite.Faculty
 {
     public partial class AssignGroupToProject : System.Web.UI.Page
     {
-        //*************************************************************
-        // Uses TODO 09, 10, 11, 12, 13, 14, 15, 16; in Helpers.cs 33 *
-        //*************************************************************
+        //******************************************************************
+        // Uses TODO 09, 10, 11, 12, 13, 14, 15, 16; in SharedAccess.cs 33 *
+        //******************************************************************
         private FYPMSDB myFYPMSDB = new FYPMSDB();
         private Helpers myHelpers = new Helpers();
+        private SharedAccess mySharedAccess = new SharedAccess();
         private decimal maxGroups = 4;
         private readonly string loggedinUsername = HttpContext.Current.User.Identity.Name;
 
@@ -314,8 +315,8 @@ namespace FYPMSWebsite.Faculty
                         //***************
                         if (myFYPMSDB.AssignGroupToProject(groupCode, fypId, groupId))
                         {
-                            // Uses TODO 33 in Helpers.cs.
-                            if (!myHelpers.CreateRequirementRecord(loggedinUsername, dtGroupMembers, lblResultMessage))
+                            // Uses TODO 33 in SharedAccess.cs.
+                            if (!mySharedAccess.CreateRequirementRecord(loggedinUsername, dtGroupMembers, lblResultMessage))
                             {
                                 // Uses TODO 45. Undo the assignment of the group to the project if creating the Requirement record failed.
                                 if (!myFYPMSDB.RemoveGroupFromProject(groupId))
