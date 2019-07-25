@@ -33,10 +33,10 @@ namespace FYPMSWebsite.App_Code
             //**************************************************************************
             // TODO 01: Used in Coordinator/AssignReader.aspx.cs                       *
             // Construct the SQL SELECT statement to retrieve the group id, group code *
-            // and project title, category and type for the project groups that DO NOT *
+            // assigned fyp id and project title, category and type for the project groups that DO NOT *
             // have an assigned reader. Order the result by group code ascending.      *
             //**************************************************************************
-            sql = "select p.groupid,p.groupCode,f.title,f.fypCategory,f.fypType from ProjectGroup p,FYProject f " +
+            sql = "select p.groupid,p.groupCode,p.fypAssigned,f.title,f.fypCategory,f.fypType from ProjectGroup p,FYProject f " +
                 "where p.fypAssigned=f.fypId and reader is NULL order by p.groupCode asc";
             return myOracleDBAccess.GetData(sql);
         }
@@ -125,7 +125,10 @@ namespace FYPMSWebsite.App_Code
             // can be updated by ANY of the supervisors of a project, only the username of the      *
             // faculty who assigned a group to a project appears in the Requirement table record.   *                                                  *
             //***************************************************************************************
-            sql = "";
+            sql = "update Requirement set progressGrade =" + progressGrade + ", finalGrade=" + finalGrade +
+                ",presentationGrade=" + presentationGrade + ",proposalGrade=" + proposalGrade +
+                " where studentUsername='" + studentUsername + "' and facultyUsername in " +
+                "(select username from Supervises where fypId=" + fypId;
             return SetData(sql);
         }
 
@@ -137,7 +140,8 @@ namespace FYPMSWebsite.App_Code
             // codes of the supervisors of a project identified by its FYP id. *
             // Order the result by faculty code ascending.                     *
             //******************************************************************
-            sql = "";
+            sql = "select f.facultyCode from Faculty f, Supervises s where " +
+                "s.username=f.username and s.fypId="+fypId;
             return myOracleDBAccess.GetData(sql);
         }
 
@@ -150,7 +154,7 @@ namespace FYPMSWebsite.App_Code
             // A group code prefix is the group code minus its trailing  *
             // integer (e.g., for group code "FL1" the prefix is "FL").  *
             //************************************************************
-            sql = "";
+            sql = "select count(*) from ProjectGroup having substr(groupCode,0,(Length(groupCode)-1))='"+groupCodePrefix+"'";
             return myOracleDBAccess.GetAggregateValue(sql);
         }
 
