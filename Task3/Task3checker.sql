@@ -67,4 +67,84 @@ select count(p.groupId) from ProjectGroup p, Supervises s
 where p.fypAssigned=s.fypId and s.username='';
 
 --TODO 17--
+insert into FYProject values( ,'title','fypDescription','fypCategory','requirement',minstds,maxstds,'IsAvailable');
 
+--TODO 18--
+insert into Supervises values('username', fypId);
+
+--TODO 19--
+select fp.fypId,fp.title,fp.fypCategory,fp.fypType,fp.minStudents,fp.maxStudents
+from FYProject fp,Faculty f,Supervises s where s.fypId=fp.fypId and s.username=f.username 
+where s.username='username' order by fp.title asc;
+
+--TODO 20--
+select * from InterestedIn where fypId= ;
+
+--TODO 21--
+select s2.username from Supervises s1,Supervises s2 
+where s1.fypId=s2.fypId and s1.username!=s2.username and s1.username='username';
+
+--TODO 22--
+update FYProject set title='title',fypDescription='Description',fypCategory='category',
+fyptype='type',requirement='requirement',minStudents=minstds,maxstudents=maxstds,isAvailable='isAvailable'
+where fypId=projectId;
+
+--TODO 23--
+delete from Supervises where username='username' and fypId=ProjectId;
+
+--TODO 24--
+insert into InterestedIn values(ProjectId,groupId,Priority);
+
+--TODO 25--
+select f.title from FYProject f,ProjectGroup p where p.fypAssigned=f.fypId
+and p.groupId=groupId;
+
+--TODO 26--
+update students set groupId=groupId where username='username';
+
+--TODO 27--
+select * from Students where username='username';
+
+--TODO 28--
+update Students set groupId=NULL where username='username';
+
+--TODO 29--
+delete from ProjectGroup where groupId=groupId;
+
+--TODO 30--
+insert into ProjectGroup values(groupId,NULL,NULL,NULL);
+
+--TODO 31--
+select f.fypId, f.title from FYProject f,ProjectGroup p,Students s 
+where s.groupId=p.groupId and p.fypAssigned=f.fypId and s.uername='username';
+
+--TODO 32--
+select f.facultyName,r.proposalGrade,r.progressGrade,r.finalGrade,r.presentationGrade 
+from Faculty f,Requirement r where f.username=r.facultyUsername and r.studentUsername='username';
+
+--TODO 33--
+insert into Requirement values('facultyusername','studentusername',proposalGrade,progressGrade,finalgrade,presentationGrade);
+
+--TODO 34--
+select fypAssigned from ProjectGroup where groupId=groupId;
+
+--TODO 35--
+select username and facultyName from Faculty;
+
+--TODO 36--
+
+
+--TODO 37--
+select * from Students where groupId = groupId;
+
+--TODO 38--
+select GroupId from Students where username='username';
+
+--TODO 39--
+select f.username,f.facultyName from Faculty f,Supervises s 
+where f.username=s.uername and s.fypId=fypId;
+
+--TODO 40--
+SELECT f.fypId,f.title,f.fypCategory,f.fyptype,i.fypPriority from
+InterestedIn i, FYProject f where f.fypId=i.fypId and i.groupId=groupId
+order by i.fypPriority asc;
