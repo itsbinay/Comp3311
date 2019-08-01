@@ -323,7 +323,7 @@ namespace FYPMSWebsite.App_Code
             // any, of a project, identified by its fyp id, given the username of one supervisor.  *
             //**************************************************************************************
             sql = "select distinct s2.username from Supervises s1,Supervises s2 where s1.fypId=s2.fypId "+
-            "and s1.username!=s2.username and s1.username='"+username+"'";
+            "and s1.username!=s2.username and s1.username='"+username+"' and s1.fypId="+fypId;
             return myOracleDBAccess.GetData(sql);
         }
 
